@@ -1,6 +1,6 @@
 NAME = libftprintf.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror $(INCLUDES_D)
+CFLAGS = -Wall -Wextra  $(INCLUDES_D)
 
 SRC = ft_printf.c	
 OBJ = $(SRC:.c=.o)
@@ -19,8 +19,8 @@ SRC := $(addprefix $(SRC_D), $(SRC))
 
 $(NAME):$(OBJ)
 	$(MAKE) -C libft
-	mv libft/libft.a $(NAME)
-	ar rcs $(NAME) $(OBJS)
+	cp libft/libft.a $(NAME)
+	ar rcs $(NAME) $(OBJ)
 
 $(OBJ_D)%.o: $(SRC_D)%.c includes/ft_printf.h| $(OBJ_D)
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -37,6 +37,7 @@ fclean: clean
 re: fclean all
 
 # Create directories
+
 $(OBJ_D):
 	mkdir -p $(OBJ_D)
 $(BIN_D):
@@ -46,7 +47,5 @@ $(BIN_D):
 
 .PHONY: debug
 debug : $(OBJ)
-	@$(CC) $(CFLAGS) -g $< libft/libft.a -o $(BIN_D)a.out
-
-run : debug
-	@./$(BIN_D)./a.out
+	$(MAKE) re
+	@$(CC) $(CFLAGS) -g3 $< libft/libft.a -o a.out

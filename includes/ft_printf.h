@@ -6,7 +6,7 @@
 /*   By: dernst <dernst@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 13:30:15 by dernst            #+#    #+#             */
-/*   Updated: 2024/12/04 17:53:13 by dernst           ###   ########lyon.fr   */
+/*   Updated: 2024/12/04 18:17:16 by dernst           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,6 @@
 # include <libft.h>
 
 int	ft_printf(const char *format, ...);
-static void check_pourcent(char c, va_list args);
+static void check_pourcent(char c, va_list args, size_t *temp_len);
 
 #endif

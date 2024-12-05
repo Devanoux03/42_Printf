@@ -1,8 +1,8 @@
 {
   "files.associations": {
-	"header.h": "c",
-	"ft_printf.h": "c"
-},
+    "header.h": "c",
+    "ft_printf.h": "c"
+  },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
   "C_Cpp_Runner.debuggerPath": "gdb",
