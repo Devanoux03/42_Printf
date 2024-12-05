@@ -6,7 +6,7 @@
 /*   By: dernst <dernst@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 13:22:17 by dernst            #+#    #+#             */
-/*   Updated: 2024/12/05 20:38:10 by dernst           ###   ########lyon.fr   */
+/*   Updated: 2024/12/05 22:55:07 by dernst           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,119 +14,112 @@
 #include "libft.h"
 #include "limits.h"
 
-// Check each malloc and check potential leaks with valgrind 
-// If args == NULL so return NULL or print NULL i don't remember but do somethings
+// Check each malloc with valgrind to see if it's create leaks 
+// Dont have a git inside a git
+// Check if we have the last version of libft inside the printfs
+// Delete the main
+// Find better name function to looks less mess
+// Patch the makefiles
 
-static void check_pourcent(char c, va_list args, size_t *temp_len)
+void	check_pourcent_str(char c, va_list args, size_t *len_write, char **temp)
 {
-	char ch;
-	char *p_free;
-	char *current;
-	unsigned long int current_p;
-
-	if(c == 'c')
-	{
-		ch = va_arg(args, int);
-		*temp_len += ft_putchar_fd(ch, 1);
-	}
-	if (c == 's')
-	{
-		current = va_arg(args, char *);
-		if (current == NULL)
-		{
-			write(1, "(null)", 6);
-			*temp_len += 6;
-		}
-		*temp_len += ft_putstr_fd(current, 1);
-	}
-	if (c == 'p')
-	{
-		current_p = va_arg(args, long int);
-		if (current_p <= 0)
-		{
-			write(1, "(nil)", 5);
-			*temp_len += 5;
-		}
-		else
-		{
-			write(1, "0x", 2);
-			p_free = ft_putunbr_base(current_p, "0123456789abcdef");
-			*temp_len += ft_putstr_fd(p_free, 1);
-			free(p_free);
-			*temp_len += 2;
-		}
-	}
-	if (c == 'x')
-	{
-		p_free = ft_putunbr_base(va_arg(args, unsigned int), "0123456789abcdef");
-		*temp_len += ft_putstr_fd(p_free, 1);
-		free(p_free);
-	}
-	if (c == 'X')
-	{
-		p_free = ft_putunbr_base(va_arg(args, unsigned int), "0123456789ABCDEF");
-		*temp_len += ft_putstr_fd(p_free, 1);
-		free(p_free);
-		
-	}
-	if (c == '%')
-		*temp_len += ft_putchar_fd('%', 1);
-}
-
-void	check_pourcent_str(char c, va_list args, size_t *len_write)
-{
-	char	*temp_free;
 	char	*current;
 
 	if (c == 's')
 	{
 		current = va_arg(args, char *);
 		if (current == NULL)
-		{
-			write(1, "(null)", 6);
-			*len_write += 6;
-		}
+			*len_write += ft_putstr_fd("(null)", 1);
 		*len_write += ft_putstr_fd(current, 1);
 	}
-	
+	if (c == 'x')
+	{
+		*temp = ft_putunbr_base(va_arg(args, unsigned int), "0123456789abcdef");
+		*len_write += ft_putstr_fd(*temp, 1);
+	}
+	if (c == 'X')
+	{
+		*temp = ft_putunbr_base(va_arg(args, unsigned int), "0123456789ABCDEF");
+		*len_write += ft_putstr_fd(*temp, 1);
+	}
 }
 
-void	check_pourcent_int(char c, va_list args, size_t *len_write)
+void	check_pourcent_p(char c, va_list args, size_t *len_write, char **temp)
 {
-	char 	*temp_free;
+	unsigned long int	current_p;
+
+	if (c == 'p')
+	{
+		current_p = va_arg(args, long int);
+		if (current_p <= 0)
+			*len_write += ft_putstr_fd("(nil)", 1);
+		else
+		{
+			*temp = ft_putunbr_base(current_p, "0123456789abcdef");
+			*len_write += ft_putstr_fd("0x", 1);
+			*len_write += ft_putstr_fd(*temp, 1);
+		}
+	}
+}
+
+void	check_pourcent_i_c(char c, va_list args, size_t *len_write, char **temp)
+{
+	char	current;
 	size_t	temp_int;
-	
+
+	temp_int = 0;
 	if (c == 'd' || c == 'i')
 		*len_write += ft_putnbr_fd(va_arg(args, int), 1, &temp_int);
 	if (c == 'u')
 	{
-		temp_free = ft_putunbr_base(va_arg(args, unsigned int), "0123456789");
-		*len_write += ft_putstr_fd(temp_free, 1);
-		free(temp_free);
+		*temp = ft_putunbr_base(va_arg(args, unsigned int), "0123456789");
+		*len_write += ft_putstr_fd(*temp, 1);
 	}
+	if (c == 'c')
+	{
+		current = va_arg(args, int);
+		*len_write += ft_putchar_fd(current, 1);
+	}
+	if (c == '%')
+		*len_write += ft_putchar_fd('%', 1);
+}
+
+void	check_pourcent(char c, va_list args, size_t *len_write)
+{
+	char	*temp_free;
+
+	temp_free = NULL;
+	if (c == 's' || c == 'x' || c == 'X')
+		check_pourcent_str(c, args, len_write, &temp_free);
+	if (c == 'd' || c == 'i' || c == 'u' || c == 'c' || c == '%')
+		check_pourcent_i_c(c, args, len_write, &temp_free);
+	if (c == 'p')
+		check_pourcent_p(c, args, len_write, &temp_free);
+	free(temp_free);
 }
 
 int	ft_printf(const char *format, ...)
 {
-	int	i;
-	size_t len;
-	va_list args;
+	int			i;
+	size_t		len;
+	va_list		args;
+
 	if (format)
 	{
 		va_start(args, format);
-		len = 0;	
+		len = 0;
 		i = 0;
-			while (format[i])
+		while (format[i])
+		{
+			if (format[i] == '%')
+				check_pourcent(format[++i], args, &len);
+			else
 			{
-				if (format[i] == '%')
-					check_pourcent(format[++i], args, &len);
-				else
-				{
-					ft_putchar_fd(format[i], 1);
-					len++;
-				}
-				i++;
+				ft_putchar_fd(format[i], 1);
+				len++;
 			}
+			i++;
+		}
 		va_end(args);
 		return (len);
 	}
@@ -136,12 +129,10 @@ int	ft_printf(const char *format, ...)
 
 //int main(void)
 //{
-
 //	//char *str = "0";
 //	//char *test = "test";
 //	int i;
 //	i = 0;
-//	ft_printf("%d", ft_printf(NULL));
-//	//printf("%d",printf(NULL));
+//	ft_printf("\n%d\n", ft_printf("%u", 15));	
 //	return (0);
 //}
