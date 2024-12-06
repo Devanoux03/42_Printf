@@ -6,20 +6,12 @@
 /*   By: dernst <dernst@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 13:22:17 by dernst            #+#    #+#             */
-/*   Updated: 2024/12/05 22:55:07 by dernst           ###   ########lyon.fr   */
+/*   Updated: 2024/12/06 10:07:13 by dernst           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "libft.h"
-#include "limits.h"
-
-// Check each malloc with valgrind to see if it's create leaks 
-// Dont have a git inside a git
-// Check if we have the last version of libft inside the printfs
-// Delete the main
-// Find better name function to looks less mess
-// Patch the makefiles
 
 void	check_pourcent_str(char c, va_list args, size_t *len_write, char **temp)
 {
@@ -126,13 +118,3 @@ int	ft_printf(const char *format, ...)
 	else
 		return (-1);
 }
-
-//int main(void)
-//{
-//	//char *str = "0";
-//	//char *test = "test";
-//	int i;
-//	i = 0;
-//	ft_printf("\n%d\n", ft_printf("%u", 15));	
-//	return (0);
-//}

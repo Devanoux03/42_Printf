@@ -27,11 +27,12 @@ $(OBJ_D)%.o: $(SRC_D)%.c includes/ft_printf.h| $(OBJ_D)
 
 .PHONY: clean
 clean:
-	rm -f $(OBJ)
+	rm -rf $(OBJ_D)
 
 .PHONY: fclean
 fclean: clean
 	rm -f $(NAME)
+	rm -f a.out
 
 .PHONY: re
 re: fclean all
